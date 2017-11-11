@@ -55,6 +55,11 @@ def scanHost(host='127.0.0.1',ports='22,80',arguments='-sV'):
             if ports.split(',')[i] == '22':
                 kippo.scan(host)
                 print "Kippo total honeyscore is " + str(kippo.hs['honeyscore'])
+            elif ports.split(',')[i] == '21':
+                h = 0
+                if 'honeypot' in service:
+                    h = h + 5
+                    print 'honeyscore 5 : nmap service scan fingerprinted this honeypot '
 
 def opscanHost(host='127.0.0.1',arguments='-O'):
     try:
