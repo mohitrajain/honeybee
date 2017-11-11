@@ -1,4 +1,4 @@
-#!venv/bin/python
+#!/usr/bin/python
 import ftplib
 from ftplib import FTP
 from sys import argv
@@ -35,7 +35,7 @@ try:
     print(ftp.sendcmd('umask'))
     print(ftp.dir())
     check('idle')
-    check('open')
     check('tenex')
+    check('open')
 except Exception as error:
     print(str(error))
