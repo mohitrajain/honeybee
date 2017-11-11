@@ -3,7 +3,7 @@ from multiprocessing import Process, Queue
 import nmap
 import sys
 import subprocess
-import detect
+import kippo
 
 def execute_out(cmd):
     Command = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
@@ -12,13 +12,15 @@ def execute_out(cmd):
         logger('Error Executing ' + cmd + ' \n' + err)
     return out
 
-def scanHost(host='127.0.0.1',ports='22,80',arguments='-sV -sS'):
-    
+def scanHost(host='127.0.0.1',ports='22,80',arguments='-sV'):
+
     def singleScan(p,ans, ags):
         try:
+            #print p
             nm = nmap.PortScanner()
             a = nm.scan(host,p,arguments=ags)
             ans.put(a)
+            #print a
         except nmap.PortScannerError as err:
             print "Error to connect with " + host + " for port scanning"
             print err
@@ -41,20 +43,19 @@ def scanHost(host='127.0.0.1',ports='22,80',arguments='-sV -sS'):
         tempres = result[i]
         #print tempres
         print "-----------------> PORT "+ ports.split(',')[i]
-        
+
         #print "###############Port "+ports.split(',')[i] +" Open/Closed###########"
         tstate = str(tempres['scan'][host]['tcp'][int(ports.split(',')[i])]['state'])
         #print "TCP Port is "+tstate
-        
-        
+
         if tstate == 'open':
             #print "###############Services Running##############"
             service = str(tempres['scan'][host]['tcp'][int(ports.split(',')[i])]['product'])
             print "SERVICE-INFO by TCP:- "+ service
             if ports.split(',')[i] == '22':
-                execute_out('./detect.py '+host)
-                print "Kippo total honeyscore is "+detect.hs
-        
+                kippo.scan(host)
+                print "Kippo total honeyscore is " + str(kippo.hs['honeyscore'])
+
 def opscanHost(host='127.0.0.1',arguments='-O'):
     try:
         nmop = nmap.PortScanner()
@@ -71,8 +72,9 @@ if len(sys.argv) == 1:
 
 if len(sys.argv) == 2:
     ores = opscanHost(sys.argv[1])
+    #print ores
     opname = ores['scan'][sys.argv[1]]['osmatch'][0]['name']
-    #print opname
+    print opname
     scanHost(sys.argv[1])
 
 if len(sys.argv) == 3:
@@ -86,7 +88,6 @@ if len(sys.argv) == 3:
         scanHost(sys.argv[1],','.join(l))
     else:
         scanHost(sys.argv[1],sys.argv[2])
-    
 
 if len(sys.argv) == 4:
     ores = opscanHost(sys.argv[1])
