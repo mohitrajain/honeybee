@@ -26,7 +26,6 @@ try:
     check('open')
 except Exception as error:
     print(str(error))
-=======
 
 def scan(ip):
     ftp = FTP(ip)
@@ -58,4 +57,3 @@ if __name__ == '__main__':
         print("Usage ftp_client.py <host_address=127.0.0.1> <port_no=21> <username=anonymous> <passwd=123>")
         exit()
     scan(ip)
->>>>>>> 41da264ba5de01e14dae090434ac5894fa85507e
