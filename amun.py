@@ -1,3 +1,3 @@
-#!venv/bin/python
+#!/usr/bin/python
 
 import 

@@ -1,4 +1,4 @@
-#!venv/bin/python
+#!/usr/bin/python
 import ftplib
 from ftplib import FTP
 from sys import argv

@@ -1,4 +1,4 @@
-#!venv/bin/python
+#!/usr/bin/python
 
 from bs4 import BeautifulSoup as bs
 import requests
