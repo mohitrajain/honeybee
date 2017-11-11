@@ -14,7 +14,6 @@ def check(cmd):
     global ftp
     print(ftp.sendcmd(cmd))
 
-<<<<<<< HEAD
 print(ftp.getwelcome())
 ftp.login()
 try:
