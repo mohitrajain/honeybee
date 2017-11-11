@@ -14,6 +14,17 @@ def check(cmd):
     global ftp
     print(ftp.sendcmd(cmd))
 
+print(ftp.getwelcome())
+ftp.login()
+try:
+    print(ftp.nlst())
+    print(ftp.sendcmd('umask'))
+    print(ftp.dir())
+    check('idle')
+    check('tenex')
+    check('open')
+except Exception as error:
+    print(str(error))
 
 def scan(ip):
     ftp = FTP(ip)
