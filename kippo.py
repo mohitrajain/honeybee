@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python2
 import socket
 import paramiko
 import sys
@@ -12,20 +12,29 @@ def cipherspecTest(host):
     t.start_client()
     #k = t.get_remote_server_key()
     a = t.get_security_options()
+    print t.host_key.__dict__
+    #print("ATTRS OF KEY: ", t.host_key.__dict__)
+    print(str(t.host_key.size))
+    
     if t.host_key.size == 1024:
        hs['honeyscore']+=2
-       print 'honeyscore 2 : diffie-hellman-group-exchange-sha1 used by kippo'
+       print('honeyscore 2 : diffie-hellman-group-exchange-sha1 used by kippo')
+    
 
 def commandTest(host):
     client = paramiko.SSHClient()
     client.load_system_host_keys()
     client.set_missing_host_key_policy(paramiko.WarningPolicy())
-    client.connect(host,22,'root','123456')
+    try:
+        client.connect(host,22,'root','123456')
+    except paramiko.ssh_exception.AuthenticationException: 
+        print("Authentication Failure!")
+        exit()
     try:
         (stdin, stdout, stderr) = client.exec_command('ifconfig')
     except:
         hs['honeyscore']+=3
-        print 'honeyscore 3 : commands execution not supported by kippo'
+        print('honeyscore 3 : commands execution not supported by kippo')
 
 # research by andrew-morris
 def andrewMorris(host):
@@ -38,7 +47,7 @@ def andrewMorris(host):
 
     if "168430090" in response:
         hs['honeyscore']+=5
-        print 'honeyscore 5 : twisted framework mishandled input '
+        print('honeyscore 5 : twisted framework mishandled input ')
 
 def scan(host):
     cipherspecTest(host)
@@ -47,10 +56,10 @@ def scan(host):
 
 if __name__ == '__main__':
     if len(sys.argv) != 2:
-        print '[+] Usage: python %s 1.1.1.1' % sys.argv[0]
+        print('[+] Usage: python %s 1.1.1.1' % sys.argv[0])
         exit()
 
     host = sys.argv[1]
     cipherspecTest(host)
-    commandTest(host)
-    andrewMorris(host)
+    #commandTest(host)
+    #andrewMorris(host)

@@ -1,4 +1,5 @@
 #!/usr/bin/python
+import kippo
 import ftplib
 from ftplib import FTP
 from sys import argv,exit
@@ -14,8 +15,17 @@ def check(cmd):
     global ftp
     print(ftp.sendcmd(cmd))
 
-print(ftp.getwelcome())
-ftp.login()
+    print(ftp.getwelcome())
+    ftp.login()
+    try:
+        print(ftp.nlst())
+        print(ftp.sendcmd('umask'))
+        print(ftp.dir())
+        check('idle')
+        check('tenex')
+        check('open')
+    except Exception as error:
+        print(str(error))
 try:
     print(ftp.nlst())
     print(ftp.sendcmd('umask'))
@@ -40,7 +50,10 @@ def scan(ip):
         check('tenex')
     except Exception as error:
         if 'implemented' in str(error):
-            print 'honeyscore 5: unimplemented commands'
+            print('honeyscore 5: unimplemented commands')
+
+    kippo.scan(ip)
+    print("Kippo honeyscore is %s ...", kippo.hs['honeyscore'])
 
 if __name__ == '__main__':
     ip = '127.0.0.1'

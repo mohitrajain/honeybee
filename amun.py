@@ -1,5 +1,6 @@
 #!/usr/bin/python
 
+import kippo
 import subprocess
 import sys
 
@@ -11,9 +12,9 @@ if len(sys.argv)==2:
 cmd=''
 
 try:
+    print('Trying ...')
     cmd=subprocess.check_output("openssl s_client -connect " + ip + ":443", shell=True)
-    # print(cmd)
-except:
+except Exception as e:
     print("Possibly a Honeypot Detected, since the server doesn't has an SSL Certificate!")
     print("HoneyScore: 1")
     sys.exit(0)
@@ -27,6 +28,9 @@ if "dionaea" in str(cmd):
     # print("# Dionaea Honeypot Detected! #")
     # print("##############################")
     print("HoneyScore: 10")
+
+kippo.scan(ip)
+print("Kippo Honeyscore is %s ...", kippo.hs['honeyscore'])
 
 # process = subprocess.Popen('openssl s_client -connect ' + ip + ':443', shell=False, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=None)
 # process.stdin.write('gams "indus89.gms"\r\n')
